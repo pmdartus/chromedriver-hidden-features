@@ -1,0 +1,15 @@
+{
+  "name": "chromedriver-hidden-features",
+  "version": "1.0.0",
+  "description": "ChromeDriver hidden features for performance measurement",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Pierre-Marie Dartus <dartus.pierremarie@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "webdriverio": "^4.6.1"
+  }
+}
