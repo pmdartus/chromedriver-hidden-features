@@ -1,22 +1,27 @@
 const fs = require('fs');
 const { remote } = require('webdriverio');
 
-function takeHeapSnapshot(url, name) {
-  return remote()
+module.exports = function recordHeapSnapshot(url, name) {
+  const browser = remote({
+    desiredCapabilities: { browserName: 'chrome' }
+  });
+
+  return browser
     .init()
     .url(url)
     .execute(':takeHeapSnapshot')
     .then(({ value }) => {
-      const snapshot = JSON.stringify(value);
+      // Reassign the keys in the expected order by the devtool
+      const snapshot = JSON.stringify({
+        snapshot: value.snapshot,
+        nodes: value.nodes,
+        edges: value.edges,
+        trace_function_infos: value.trace_function_infos,
+        trace_tree: value.trace_tree,
+        samples: value.samples,
+        strings: value.strings
+      });
       fs.writeFileSync(`${name}.heapsnapshot`, snapshot);
     })
-    .end()
+    .end();
 }
-
-if (process.argv.length < 4) {
-  throw new Error('Usage: node ./heap-snapshot [url] [snapshot-name]');
-}
-
-const [url, name]  = process.argv.slice(-2);
-takeHeapSnapshot(url, name)
-  .catch(console.error)
